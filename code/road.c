@@ -1,5 +1,7 @@
 #include "road.h"
 
+#include "trafficSimulator.h"
+
 /* Suggested TODO - Write a function to create road.
  */
 RoadData* createRoad(RoadData* road, int from, int roadlen, int green, int red, int reset){
@@ -12,9 +14,12 @@ RoadData* createRoad(RoadData* road, int from, int roadlen, int green, int red, 
 }
 /* Suggested TODO - Write a function to free a road.
  */
+void freeRoad(RoadData* road){
+  free(road);
+}
 
 /* Suggested TODO - Write a function that attempts to move the cars on a given road forward (if space ahead of them was empty).
- */
+*/
 
 /* Suggested TODO - Write a function to attempt to move the car at the first position on a given road
  * to the last position of a another given road.

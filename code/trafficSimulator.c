@@ -3,16 +3,8 @@
 void printRoadData( int length, int from, int to, int greenStartTime, int greenEndTime, int lightCycleLength );
 int max( int a, int b );
 
-/* printNames
- * input: none
- * output: none
- *
- * Prints names of the students who worked on this solution
- * REMINDER: You may only work with one other cs2124 student
- */
 void printNames( )
 {
-    /* TODO : Fill in you and your partner's names (or N/A if you worked individually) */
     printf("\nThis solution was completed by:\n");
     printf("<Victor Olvera>\n");
     printf("<Nick Foley>\n\n");
@@ -29,7 +21,7 @@ TrafficData* createTrafficData( char* filename )
     /* open the file */
     FILE *pFile = fopen( filename, "r" );
     
-    int vertices, edges, incoming, add, timeStep,to,from,i,j,k,numCars,destination;
+    int vertices, edges, incoming, add, timeStep, to, from, i, j, k, numCars, destination;
     /*intialize memory for struct*/
     fscanf( pFile, "%d %d", &vertices, &edges);
     TrafficData* traffic = (TrafficData*)malloc(sizeof(TrafficData));
