@@ -1,0 +1,64 @@
+# Compiled Binaries
+*.o
+*.out
+*.exe
+
+# Object Files and Libraries
+*.obj
+*.a
+*.so
+
+# Build Directories
+/build/
+/bin/
+/lib/
+
+# IDE/Editor Files (if applicable)
+.vscode/
+.idea/
+.project
+.cproject
+
+# Dependency Directories (if using a package manager)
+/vendor/
+/node_modules/
+
+# Temporary Files
+*~
+*.swp
+.DS_Store
+
+# Log and Output Files
+*.log
+*.txt
+
+# User-Specific or System Files
+.config/
+.local/
+
+# Config Files (if managed elsewhere)
+config.ini
+
+# Generated Documentation
+/doc/
+
+# Compiler/IDE-Specific Files (e.g., Visual Studio)
+*.sdf
+*.opensdf
+*.suo
+*.user
+
+# Database Files (if using a local database)
+*.db
+
+# Custom Build Script Outputs (if applicable)
+/output/
+
+# IDE/Editor Backup Files
+*#
+
+# Temporary Files Generated During Compilation
+.*.d
+
+# System and IDE Configuration Files
+.settings/
