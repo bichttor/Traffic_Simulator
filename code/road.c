@@ -15,6 +15,7 @@ RoadData* createRoad(RoadData* road, int from, int roadlen, int green, int red, 
 /* Suggested TODO - Write a function to free a road.
  */
 void freeRoad(RoadData* road){
+  /*create loop that frees all cars left in road*/
   free(road);
 }
 
