@@ -17,7 +17,7 @@ typedef struct RoadData
     int red;
     int reset;
     /* intersections this road starts from and moves to */
-    int from;
+    int from; // origin
     /* Each road should have an array to track cars currently driving on them.  The type of this array can be either `Car**` 
      * (array of car pointers) or `Car*` (array of cars) but the former may be easier to use since locations on the road can 
      * be set to `NULL` if no car is present.
@@ -30,9 +30,11 @@ typedef struct RoadData
     Queue q;
 }  RoadData;
 RoadData* createRoad(RoadData* road, int from, int roadlen, int green, int red, int reset);
+void printDestinations(RoadData* road, int j);
 void freeRoad(RoadData* road);
 void moveCars(RoadData* road, int k);
 void printCar();
+
 
 #endif
 

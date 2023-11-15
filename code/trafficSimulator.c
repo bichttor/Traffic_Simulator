@@ -32,7 +32,7 @@ TrafficData* createTrafficData( char* filename )
     k = 0;/*keep track of the roads*/
     /*read in data for roads*/
     for(i = 0; i < vertices; i++){
-      fscanf(pFile,"%d", &incoming);
+      fscanf(pFile,"%d", &incoming); // amount of roads going to vertex i
       for(j = 0; j < incoming; j++){
         fscanf(pFile, "%d %d %d %d %d", &traffic->roads[k].from, &traffic->roads[k].roadlen, &traffic->roads[k].green, &traffic->roads[k].red, &traffic->roads[k].reset);
         setEdge(traffic->g, traffic->roads[k].from, i , traffic->roads[k].roadlen );
@@ -47,14 +47,17 @@ TrafficData* createTrafficData( char* filename )
     for(i = 0; i<add; i++){
       fscanf(pFile, "%d %d %d %d", &from, &to, &timeStep,&numCars);
       e = createAddCarEvent(timeStep,traffic->roads );
-      traffic->roads->cars = (Car**)malloc(sizeof(Car*)*numCars);
+      e->pRoadData->cars = (Car**)malloc(sizeof(Car*)*numCars);
       for(j = 0; j < numCars; j++){
         fscanf(pFile,"%d", &destination);
-        traffic->roads->cars[j] = createCar( timeStep, from, to,destination);
-        enqueue(e->pCarQueue, traffic->roads->cars[j]);
-        printf("%d %d %d\n",traffic->roads->cars[j]->origin,traffic->roads->cars[j]->next,traffic->roads->cars[j]->destination);
+        e->pRoadData->cars[j] = createCar( timeStep, from, to,destination);
+        enqueue(e->pCarQueue, e->pRoadData->cars[j] );
+        printf("%d %d %d\n",e->pRoadData->cars[j]->origin,e->pRoadData->cars[j]->next,e->pRoadData->cars[j]->destination);
+
+      	printDestinations(traffic->roads, j); //This is a test
       }
     }
+
     
     /* HINTs:
      * Each road can be stored in a `RoadData` struct (see `road.h`).

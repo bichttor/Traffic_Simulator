@@ -16,6 +16,7 @@ RoadData* createRoad(RoadData* road, int from, int roadlen, int green, int red, 
  */
 void freeRoad(RoadData* road){
     /*create loop that frees all cars left in road*/
+
     free(road);
 }
 
@@ -50,9 +51,12 @@ void updateLight(RoadData* road, int greenOn, int greenOff, int cycleReset) {
 }
 /* Suggested TODO - Write a function to print the destinations of the cars on the road
  */
-void printDestinations(RoadData* road) {
-//int origin = *Car->origin;
+void printDestinations(RoadData* road, int j) {
+ int origin = road->cars[j]->origin;
+ // int nextRoad = road->from;
+
+ int dest = road->cars[j]->destination;
+
+ //printf("Test Test Test From %d to %d\n", origin, dest);
+ printf("Cars on the road from %d to %d: \n", origin,dest);
 }
-//printf("Cars on the road from %d to %d: \n", ????, ????);
-
-
