@@ -16,6 +16,7 @@
 # IDE/Editor Files (if applicable)
 .vscode/
 .idea/
+*.idea/
 .project
 .cproject
 
