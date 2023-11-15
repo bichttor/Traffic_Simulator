@@ -45,7 +45,7 @@ TrafficData* createTrafficData( char* filename )
     fscanf(pFile, "%d", &add);
     Event* e;
     for(i = 0; i<add; i++){
-      fscanf(pFile, "%d %d %d %d", &from, &to, &timeStep,&numCars);
+      fscanf(pFile, "%d %d %d %d", &from, &to, &timeStep,&numCars); // numcars is number of cars in each event
       e = createAddCarEvent(timeStep,traffic->roads );
       e->pRoadData->cars = (Car**)malloc(sizeof(Car*)*numCars);
       for(j = 0; j < numCars; j++){

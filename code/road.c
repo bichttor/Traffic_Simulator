@@ -23,6 +23,7 @@ void freeRoad(RoadData* road){
 /* Suggested TODO - Write a function that attempts to move the cars on a given road forward (if space ahead of them was empty).
 */
 void moveCars(RoadData* road, int k/*k is the current position the car is in*/) {
+    /* Car position might be passed from Event*/
     if (road->cars[k] != NULL && road->cars[k + 1] == NULL) {
         road->cars[k + 1] = road->cars[k]; // moves the car forward
         road->cars[k] = NULL; // sets "current" slot to NULL
