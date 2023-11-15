@@ -27,7 +27,8 @@ TrafficData* createTrafficData( char* filename )
     TrafficData* traffic = (TrafficData*)malloc(sizeof(TrafficData));
     traffic->g = createGraph(vertices);
     traffic->roads = (RoadData*)malloc(sizeof(RoadData)*edges);
-    
+    traffic->pq = createPQ( );
+	
     k = 0;/*keep track of the roads*/
     /*read in data for roads*/
     for(i = 0; i < vertices; i++){
@@ -158,7 +159,10 @@ void trafficSimulator( TrafficData* pTrafficData )
  */
 void freeTrafficData( TrafficData* pTrafficData )
 {
-    /* TODO: complete this function */
+  freeRoad(pTrafficData->roads);
+  freeGraph(pTrafficData->g);
+  freePQ(pTrafficData->pq);
+  free(pTrafficData);
 }
 
 int max( int a, int b )

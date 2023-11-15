@@ -30,6 +30,8 @@ typedef struct RoadData
     Queue q;
 }  RoadData;
 RoadData* createRoad(RoadData* road, int from, int roadlen, int green, int red, int reset);
+void freeRoad(RoadData* road);
+void moveCars(RoadData* road, int k);
 void printCar();
 
 #endif
