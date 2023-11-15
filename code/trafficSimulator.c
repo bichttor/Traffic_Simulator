@@ -53,7 +53,7 @@ TrafficData* createTrafficData( char* filename )
         e->pRoadData->cars[j] = createCar( timeStep, from, to,destination);
         enqueue(e->pCarQueue, e->pRoadData->cars[j] );
         printf("%d %d %d\n",e->pRoadData->cars[j]->origin,e->pRoadData->cars[j]->next,e->pRoadData->cars[j]->destination);
-	enqueueByPriority( traffic->pq, e, e->eventTimeStep );
+	      enqueueByPriority( traffic->pq, e, e->eventTimeStep );
       	printDestinations(traffic->roads, j); //This is a test
       }
     }
