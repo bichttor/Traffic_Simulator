@@ -2,6 +2,7 @@
 *.o
 *.out
 *.exe
+driver
 
 # Object Files and Libraries
 *.obj

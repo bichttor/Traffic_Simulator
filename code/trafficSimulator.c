@@ -43,7 +43,7 @@ TrafficData* createTrafficData( char* filename )
     }
     /*read in data for cars*/
     fscanf(pFile, "%d", &add);
-    Event* e = (Event*)malloc(sizeof(Event)*add);
+    Event** e = (Event**)malloc(sizeof(Event*)*add);
     for(i = 0; i<add; i++){
       fscanf(pFile, "%d %d %d %d", &from, &to, &timeStep,&numCars);
       e[i] = createAddCarEvent(timeStep,traffic->roads );
@@ -51,13 +51,13 @@ TrafficData* createTrafficData( char* filename )
       for(j = 0; j < numCars; j++){
         fscanf(pFile,"%d", &destination);
         e[i]->pRoadData->cars[j] = createCar( timeStep, from, to,destination);
-        enqueue(e[i]->pCarQueue, e->pRoadData->cars[j] );
+        enqueue(e[i]->pCarQueue, e[i]->pRoadData->cars[j] );
         printf("%d %d %d\n",e[i]->pRoadData->cars[j]->origin,e[i]->pRoadData->cars[j]->next,e[i]->pRoadData->cars[j]->destination);
 	      enqueueByPriority( traffic->pq, e[i], e[i]->eventTimeStep );
       	printDestinations(traffic->roads, j); //This is a test
       }
     }
-    for
+    //for
 
     
     /* HINTs:
@@ -86,7 +86,7 @@ TrafficData* createTrafficData( char* filename )
 
 
     /* close file */
-    fclose( pFile );
+	fclose( pFile );
 
     return traffic; /* TODO: Replace this with your TrafficData pointer */
 }
