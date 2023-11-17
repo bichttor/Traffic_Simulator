@@ -43,6 +43,9 @@ TrafficData* createTrafficData( char* filename )
     }
     /*read in data for cars*/
     fscanf(pFile, "%d", &add);
+    // Event e should go into PQ, PriorityQueue *createPQ( ); mallocs the data for us
+    // int getFrontPriority( PriorityQueue *pq ); She said this is a really helpful one	
+    // void enqueueByPriority( PriorityQueue *pq, priorityQueueType qt, int priority );
     Event** e = (Event**)malloc(sizeof(Event*)*add);
     for(i = 0; i<add; i++){
       fscanf(pFile, "%d %d %d %d", &from, &to, &timeStep,&numCars);
