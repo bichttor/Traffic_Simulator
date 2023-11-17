@@ -21,7 +21,7 @@ TrafficData* createTrafficData( char* filename )
     /* open the file */
     FILE *pFile = fopen( filename, "r" );
     
-    int vertices, edges, incoming, add, timeStep, to, from, i, j, k, numCars, destination;
+    int vertices, edges, incoming, add, timeStep, to, from, i, j, k, numCars, destination, printRoad;
     /*intialize memory for struct*/
     fscanf( pFile, "%d %d", &vertices, &edges);
     TrafficData* traffic = (TrafficData*)malloc(sizeof(TrafficData));
@@ -36,32 +36,38 @@ TrafficData* createTrafficData( char* filename )
       for(j = 0; j < incoming; j++){
         fscanf(pFile, "%d %d %d %d %d", &traffic->roads[k].from, &traffic->roads[k].roadlen, &traffic->roads[k].green, &traffic->roads[k].red, &traffic->roads[k].reset);
         setEdge(traffic->g, traffic->roads[k].from, i , traffic->roads[k].roadlen );
-        //printf( "%d %d %d %d %d\n", traffic->roads[k].from, traffic->roads[k].roadlen, traffic->roads[k].green, traffic->roads[k].red, traffic->roads[k].reset);
         printRoadData( traffic->roads[k].roadlen, traffic->roads[k].from, i, traffic->roads[k].green, traffic->roads[k].red, traffic->roads[k].reset );
         k++;
       }   
     }
+	
     /*read in data for cars*/
     fscanf(pFile, "%d", &add);
     // Event e should go into PQ, PriorityQueue *createPQ( ); mallocs the data for us
     // int getFrontPriority( PriorityQueue *pq ); She said this is a really helpful one	
     // void enqueueByPriority( PriorityQueue *pq, priorityQueueType qt, int priority );
-    Event** e = (Event**)malloc(sizeof(Event*)*add);
+    
     for(i = 0; i<add; i++){
       fscanf(pFile, "%d %d %d %d", &from, &to, &timeStep,&numCars);
-      e[i] = createAddCarEvent(timeStep,traffic->roads );
-      e[i]->pRoadData->cars = (Car**)malloc(sizeof(Car*)*numCars);
+      Event* e = createAddCarEvent(timeStep,traffic->roads );
+      e->pRoadData->cars = (Car**)malloc(sizeof(Car*)*numCars);
       for(j = 0; j < numCars; j++){
         fscanf(pFile,"%d", &destination);
-        e[i]->pRoadData->cars[j] = createCar( timeStep, from, to,destination);
-        enqueue(e[i]->pCarQueue, e[i]->pRoadData->cars[j] );
-        printf("%d %d %d\n",e[i]->pRoadData->cars[j]->origin,e[i]->pRoadData->cars[j]->next,e[i]->pRoadData->cars[j]->destination);
-	      enqueueByPriority( traffic->pq, e[i], e[i]->eventTimeStep );
+        e->pRoadData->cars[j] = createCar( timeStep, from, to,destination);
+        enqueue(e->pCarQueue, e->pRoadData->cars[j] );
+        printf("%d %d %d\n",e->pRoadData->cars[j]->origin,e->pRoadData->cars[j]->next,e->pRoadData->cars[j]->destination);
+	      enqueueByPriority( traffic->pq, e, e->eventTimeStep );
       	printDestinations(traffic->roads, j); //This is a test
       }
     }
-    //for
 
+    /*read in printRoad time steps*/
+    fscanf(pFile, "%d", &printRoad);
+    for(i = 0; i < printRoad; i++){
+      fscanf(pFile, "%d", &timeStep);
+      Event* e = createPrintRoadsEvent(timeStep);
+      enqueueByPriority( traffic->pq, e, e->eventTimeStep );/*PRINT_ROADS_EVENT*/
+    }
     
     /* HINTs:
      * Each road can be stored in a `RoadData` struct (see `road.h`).
@@ -147,7 +153,7 @@ void trafficSimulator( TrafficData* pTrafficData )
     priorityQueueType PQ;
     int i;
     /* Loop until all events processed and either all cars reached destination or gridlock has occurred */
-    while(!isEmptyPQ(pTrafficData->pq)){
+    while(!isEmptyPQ(pTrafficData->pq) /*more parameters needed*/){
       PQ = dequeuePQ( pTrafficData->pq );
       /* Update the state of every traffic light,call updateLight(RoadData* road, int greenOn, int greenOff, int cycleReset) */ 
 	    
