@@ -144,18 +144,22 @@ void printRoadData( int length, int from, int to, int greenStartTime, int greenE
 void trafficSimulator( TrafficData* pTrafficData )
 {
     /* TODO: complete this function */
-
+    priorityQueueType PQ;
+    int i;
     /* Loop until all events processed and either all cars reached destination or gridlock has occurred */
+    while(!isEmptyPQ(pTrafficData->pq)){
+      PQ = dequeuePQ( pTrafficData->pq );
+      /* Update the state of every traffic light,call updateLight(RoadData* road, int greenOn, int greenOff, int cycleReset) */ 
+	    
+      for(i = 0; i < PQ->eventTimeStep; i++){/* Loop on events associated with this time step */
+        /* First try to move cars through the next intersection */
 
-    /* Update the state of every traffic light */
+        /* Second move waiting cars onto the end of each road if possible */
 
-    /* Loop on events associated with this time step */
-
-    /* First try to move cars through the next intersection */
-
-    /* Second move waiting cars onto the end of each road if possible */
-
-    /* Third move cars forward on every road (only those that haven't moved yet this time step) */
+        /* Third move cars forward on every road (only those that haven't moved yet this time step) */
+      }
+    }
+    /*free the event's road data?*/ 
 }
 
 /* freeTrafficData
