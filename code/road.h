@@ -16,6 +16,8 @@ typedef struct RoadData
     int green;
     int red;
     int reset;
+    int lightcounter;
+    bool light; /*green == TRUE, red/reset == FALSE*/
     /* intersections this road starts from and moves to */
     int from; // origin
     /* Each road should have an array to track cars currently driving on them.  The type of this array can be either `Car**` 
