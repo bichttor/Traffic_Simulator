@@ -47,15 +47,26 @@ void moveCars(RoadData* road, int k/*k is the current position the car is in*/) 
 
 /* Suggested TODO - Write a function to update the current state of the traffic light based on the current cycle.
  */
-// Some sort of timer/counter?  We get the traffic->roads[k]
-void updateLight(RoadData* road, int greenOn, int greenOff, int cycleReset) {
+void updateLight(RoadData* road) {
+  int i;
+  for(i = 0; i < road->numRoad;i++){
+    road[i].lightcounter++;
+    if(road[i].lightcounter > road[i].reset){/*reset road light*/
+      road[i].lightcounter = 0;
+    }
+    else if(road[i].lightcounter != road[i].red &&road[i].lightcounter != road[i].reset){/*road is green*/
+      road[i].light = true;
+    }
+    else{/*road is red*/
+      road[i].light = false;   
+    }
+  }
+  
 }
 /* Suggested TODO - Write a function to print the destinations of the cars on the road
  */
 void printDestinations(RoadData* road, int j) {
  int origin = road->cars[j]->origin;
- // int nextRoad = road->from;
-
  int dest = road->cars[j]->destination;
 
  //printf("Test Test Test From %d to %d\n", origin, dest);
