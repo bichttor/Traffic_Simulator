@@ -12,6 +12,7 @@ typedef struct RoadData
     /* TODO - Add data associated with road.  Some suggested data: */
     /* length of this road */
     int roadlen;
+    int numRoad;
     /* information used to record/update whether the light at the end of this road is green or red */
     int green;
     int red;
