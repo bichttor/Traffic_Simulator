@@ -40,6 +40,13 @@ TrafficData* createTrafficData( char* filename )
         k++;
       }   
     }
+    /*store number of roads*/
+    traffic->roads->numRoad = edges;
+    
+    /*initializes the lightcounter to keep track of when to switch lights*/
+    for(i = 0; i < edges;i++){
+       traffic->roads[i].lightcounter = 0;
+    }
 	
     /*read in data for cars*/
     fscanf(pFile, "%d", &add);
@@ -55,9 +62,9 @@ TrafficData* createTrafficData( char* filename )
         fscanf(pFile,"%d", &destination);
         e->pRoadData->cars[j] = createCar( timeStep, from, to,destination);
         enqueue(e->pCarQueue, e->pRoadData->cars[j] );
-        printf("%d %d %d\n",e->pRoadData->cars[j]->origin,e->pRoadData->cars[j]->next,e->pRoadData->cars[j]->destination);
-	      enqueueByPriority( traffic->pq, e, e->eventTimeStep );
-      	printDestinations(traffic->roads, j); //This is a test
+	      
+	enqueueByPriority( traffic->pq, e, e->eventTimeStep );/*ADD_CAR_EVENT*/
+      	printDestinations(traffic->roads, j); /*This is a test*/
       }
     }
 
@@ -155,7 +162,8 @@ void trafficSimulator( TrafficData* pTrafficData )
     /* Loop until all events processed and either all cars reached destination or gridlock has occurred */
     while(!isEmptyPQ(pTrafficData->pq) /*more parameters needed*/){
       PQ = dequeuePQ( pTrafficData->pq );
-      /* Update the state of every traffic light,call updateLight(RoadData* road, int greenOn, int greenOff, int cycleReset) */ 
+      /* Update the state of every traffic */ 
+      updateLight(pTrafficData->roads);
 	    
       for(i = 0; i < PQ->eventTimeStep; i++){/* Loop on events associated with this time step */
         /* First try to move cars through the next intersection */
