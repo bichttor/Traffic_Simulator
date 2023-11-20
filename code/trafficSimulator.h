@@ -19,13 +19,13 @@ typedef struct TrafficData
     Graph* g;
     /* array of the roads of the graph in the sequence they were added to the graph */
     RoadData* roads;
-    int numRoad;
     /* priority queue of events where the priority represents the time the event will occur */
     PriorityQueue* pq;
     /* track the number of cars still in the simulator */
     int numCars;
     /* track the longest number of time steps that any light takes to cycle around.  This is useful for detecting gridlock. */
     int steps;
+    int maxTime;
 }  TrafficData;
 
 void printNames( );
