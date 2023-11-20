@@ -34,9 +34,11 @@ TrafficData* createTrafficData( char* filename )
     for(i = 0; i < vertices; i++){
       fscanf(pFile,"%d", &incoming); // amount of roads going to vertex i
       for(j = 0; j < incoming; j++){
-        fscanf(pFile, "%d %d %d %d %d", &traffic->roads[k].from, &traffic->roads[k].roadlen, &traffic->roads[k].green, &traffic->roads[k].red, &traffic->roads[k].reset);
+	fscanf(pFile, "%d %d %d %d %d", &traffic->roads[k].from, &traffic->roads[k].roadlen, &traffic->roads[k].green, &traffic->roads[k].red, &traffic->roads[k].reset);
+        traffic->roads[k].to = i;
+        traffic->roads[k].q = createQueue();
         setEdge(traffic->g, traffic->roads[k].from, i , traffic->roads[k].roadlen );
-        printRoadData( traffic->roads[k].roadlen, traffic->roads[k].from, i, traffic->roads[k].green, traffic->roads[k].red, traffic->roads[k].reset );
+        printRoadData( traffic->roads[k].roadlen, traffic->roads[k].from, traffic->roads[k].to, traffic->roads[k].green, traffic->roads[k].red, traffic->roads[k].reset );
         k++;
       }   
     }
@@ -49,31 +51,52 @@ TrafficData* createTrafficData( char* filename )
     }
 	
     /*read in data for cars*/
+    printf("Add the cars events:\n");
     fscanf(pFile, "%d", &add);
-    // Event e should go into PQ, PriorityQueue *createPQ( ); mallocs the data for us
-    // int getFrontPriority( PriorityQueue *pq ); She said this is a really helpful one	
-    // void enqueueByPriority( PriorityQueue *pq, priorityQueueType qt, int priority );
+    traffic->maxTime = 0;
     
     for(i = 0; i<add; i++){
       fscanf(pFile, "%d %d %d %d", &from, &to, &timeStep,&numCars);
       Event* e = createAddCarEvent(timeStep,traffic->roads );
       e->pRoadData->cars = (Car**)malloc(sizeof(Car*)*numCars);
+      printf("\nCreated event for time step %d on road from %d to %d.\n",timeStep,from,to);
+      printf("Destinations of added cars: ");
+      
       for(j = 0; j < numCars; j++){
         fscanf(pFile,"%d", &destination);
         e->pRoadData->cars[j] = createCar( timeStep, from, to,destination);
         enqueue(e->pCarQueue, e->pRoadData->cars[j] );
-	      
-	enqueueByPriority( traffic->pq, e, e->eventTimeStep );/*ADD_CAR_EVENT*/
-      	printDestinations(traffic->roads, j); /*This is a test*/
+      	enqueueByPriority( traffic->pq, e, e->eventTimeStep );/*ADD_CAR_EVENT*/
+        traffic->maxTime = max(traffic->maxTime, timeStep);
+        
+        if(j == numCars-1){
+          printf("%d\n",e->pRoadData->cars[j]->destination);
+        }
+        else{
+          printf("%d, ",e->pRoadData->cars[j]->destination);
+        }
+        
       }
+      
     }
 
     /*read in printRoad time steps*/
+    printf("\nAdd the roads events:\nTime steps: ");
+    
     fscanf(pFile, "%d", &printRoad);
     for(i = 0; i < printRoad; i++){
       fscanf(pFile, "%d", &timeStep);
       Event* e = createPrintRoadsEvent(timeStep);
       enqueueByPriority( traffic->pq, e, e->eventTimeStep );/*PRINT_ROADS_EVENT*/
+      traffic->maxTime = max(traffic->maxTime, timeStep);
+      
+      if(i == printRoad - 1){
+        printf("%d\n",e->eventTimeStep);
+      }
+      else{
+        printf("%d, ",e->eventTimeStep);
+      }
+      
     }
     
     /* HINTs:
@@ -102,7 +125,7 @@ TrafficData* createTrafficData( char* filename )
 
 
     /* close file */
-	fclose( pFile );
+    fclose( pFile );
 
     return traffic; /* TODO: Replace this with your TrafficData pointer */
 }
@@ -159,21 +182,41 @@ void trafficSimulator( TrafficData* pTrafficData )
     /* TODO: complete this function */
     priorityQueueType PQ;
     int i;
+    Queue *waitingCars = createQueue();
+    
     /* Loop until all events processed and either all cars reached destination or gridlock has occurred */
-    while(!isEmptyPQ(pTrafficData->pq) /*more parameters needed*/){
+    while(!isEmptyPQ(pTrafficData->pq) /*&& either all cars reached destination || gridlock has occurred */){
       PQ = dequeuePQ( pTrafficData->pq );
       /* Update the state of every traffic */ 
       updateLight(pTrafficData->roads);
-	    
-      for(i = 0; i < PQ->eventTimeStep; i++){/* Loop on events associated with this time step */
+      for(i = 0; i < pTrafficData->maxTime ; i++){/* Loop on events associated with this time step */
+        if(PQ->eventTimeStep == i){/*event is executed*/
+          if(PQ->eventCode == ADD_CAR_EVENT){/*add cars into a waiting queue for the roads*/
+            mergeQueues(waitingCars, PQ->pCarQueue);
+            printf("STEP %d - ADD_CAR_EVENT - Cars enqueued on road from %d to %d\n\n", i, PQ->pRoadData->from, PQ->pRoadData->to);
+           /*doesnt print out correct road, need a way to get the correct road for the add car event FIXME*/
+          }
+          if(PQ->eventCode == PRINT_ROADS_EVENT){
+            printf("STEP %d - PRINT_ROADS_EVENT - Current contents of the roads:\nCars on the road from %d to %d\n\n", i, pTrafficData->roads->from, pTrafficData->roads->to);
+            /*doesnt print out correct road, need a way to get the correct road FIXME*/
+            /*print out road queue*/
+          }
+          PQ = dequeuePQ( pTrafficData->pq );/* dequeue next event*/
+        }
+        /*simulate traffic*/
+           
         /* First try to move cars through the next intersection */
-
+        
         /* Second move waiting cars onto the end of each road if possible */
 
         /* Third move cars forward on every road (only those that haven't moved yet this time step) */
+        
+        /*if car reaches destination, print reach destination in I amount of steps then free car, maybe use a counter to see if all the cars have made their destination*/
       }
+    
     }
-    /*free the event's road data?*/ 
+    printf("Average number of time steps to the reach their destination is AVG.\nMaximum number of time steps to the reach their destination is MAX.");
+  
 }
 
 /* freeTrafficData
