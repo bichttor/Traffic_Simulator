@@ -40,11 +40,19 @@ void moveCars(RoadData* road, int k/*k is the current position the car is in*/) 
 /* Suggested TODO - Write a function to attempt to move the car at the first position on a given road
  * to the last position of a another given road.
  */
+void roadHopper(Queue* leavingThisOne, RoadData* road) {
+    if (front(leavingThisOne) == NULL) {
+        return;
+    }
+    Car* car = dequeue(leavingThisOne);
+    enqueue(road->queue, car);
+}
 
 /* Suggested TODO - Write a function to attempt to move a car from the add car queue onto the end of this road.
  */
 void queueToRoad(Queue* leavingThisQueue, RoadData* road) {
-    CarData* car = dequeue(leavingThisQueue);
+    // Could add error handling here
+    Car* car = dequeue(leavingThisQueue);
     enqueue(road->queue, car);
 }
 
