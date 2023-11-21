@@ -12,8 +12,7 @@
 #include "event.h"
 #include "road.h"
 
-typedef struct TrafficData
-{
+typedef struct TrafficData {
     //Optional TODO - Fill this struct in with the data needed to simulate traffic.  Suggested data:
     /* graph representing the road network */
     Graph* g;
@@ -26,12 +25,14 @@ typedef struct TrafficData
     /* track the longest number of time steps that any light takes to cycle around.  This is useful for detecting gridlock. */
     int steps;
     int maxTime;
-}  TrafficData;
+} TrafficData;
 
-void printNames( );
+void printNames();
 
-TrafficData* createTrafficData( char* name );
-void trafficSimulator( TrafficData* pTrafficData );
-void freeTrafficData( TrafficData* pTrafficData );
+TrafficData* createTrafficData(char* name);
+
+void trafficSimulator(TrafficData* pTrafficData);
+
+void freeTrafficData(TrafficData* pTrafficData);
 
 #endif

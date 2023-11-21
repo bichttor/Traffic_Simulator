@@ -43,7 +43,11 @@ void moveCars(RoadData* road, int k/*k is the current position the car is in*/) 
 
 /* Suggested TODO - Write a function to attempt to move a car from the add car queue onto the end of this road.
  */
-// From waiting queue? x = dequeue(queueName);
+void queueToRoad(Queue* leavingThisQueue, RoadData* road) {
+    CarData* car = dequeue(leavingThisQueue);
+    enqueue(road->queue, car);
+}
+
 
 /* Suggested TODO - Write a function to update the current state of the traffic light based on the current cycle.
  */
