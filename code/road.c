@@ -44,6 +44,8 @@ void roadHopper(Queue* leavingThisOne, RoadData* road) {
     if (front(leavingThisOne) == NULL) {
         return;
     }
+    // Should we update the Car** array here too?
+
     Car* car = dequeue(leavingThisOne);
     enqueue(road->queue, car);
 }
@@ -52,6 +54,7 @@ void roadHopper(Queue* leavingThisOne, RoadData* road) {
  */
 void queueToRoad(Queue* leavingThisQueue, RoadData* road) {
     // Could add error handling here
+    // Should we update the Car** array here too?
     Car* car = dequeue(leavingThisQueue);
     enqueue(road->queue, car);
 }
