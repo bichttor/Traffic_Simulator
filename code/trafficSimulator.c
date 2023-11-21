@@ -180,8 +180,8 @@ void printRoadData( int length, int from, int to, int greenStartTime, int greenE
 void trafficSimulator( TrafficData* pTrafficData )
 {
     /* TODO: complete this function */
+	int i;
     priorityQueueType PQ;
-    int i;
     Queue *waitingCars = createQueue();
     
     /* Loop until all events processed and either all cars reached destination or gridlock has occurred */
@@ -194,7 +194,7 @@ void trafficSimulator( TrafficData* pTrafficData )
           if(PQ->eventCode == ADD_CAR_EVENT){/*add cars into a waiting queue for the roads*/
             mergeQueues(waitingCars, PQ->pCarQueue);
             printf("STEP %d - ADD_CAR_EVENT - Cars enqueued on road from %d to %d\n\n", i, PQ->pRoadData->from, PQ->pRoadData->to);
-           /*doesnt print out correct road, need a way to get the correct road for the add car event FIXME*/
+           /* TODO doesnt print out correct road, need a way to get the correct road for the add car event FIXME*/
           }
           if(PQ->eventCode == PRINT_ROADS_EVENT){
             printf("STEP %d - PRINT_ROADS_EVENT - Current contents of the roads:\nCars on the road from %d to %d\n\n", i, pTrafficData->roads->from, pTrafficData->roads->to);

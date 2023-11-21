@@ -35,7 +35,8 @@ typedef struct RoadData
 }  RoadData;
 RoadData* createRoad(RoadData* road, int from, int roadlen, int green, int red, int reset);
 void freeRoad(RoadData* road);
-
+void roadHopper(Queue* leavingThisQueue, RoadData* road);
+void queueToRoad(Queue* leavingThisQueue, RoadData* road);
 void moveCars(RoadData* road, int k);
 void updateLight(RoadData* road );
 

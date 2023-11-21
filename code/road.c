@@ -27,36 +27,39 @@ void moveCars(RoadData* road, int k/*k is the current position the car is in*/) 
     if (road->cars[k] != NULL && road->cars[k + 1] == NULL) {
         road->cars[k + 1] = road->cars[k]; // moves the car forward
         road->cars[k] = NULL; // sets "current" slot to NULL
-        }else if (road->cars[road->roadlen - 1]) {
- /* this should check if car is at the end of the road.
-   probably call the function that changes intersections.
-  */
-     }else if (road->cars[k -1] != NULL && road->cars[k + 1] != NULL) {
-  /* car cannot move forward */
-     }
+        }
+    else if (road->cars[road->roadlen-1]/*if true we should be at the end of the array*/) {
+        roadHopper(road->from, road->to);
+        }
+    else if (road->cars[k -1] != NULL && road->cars[k + 1] != NULL) {
+        return;
+        }
 
     }
 
 /* Suggested TODO - Write a function to attempt to move the car at the first position on a given road
  * to the last position of a another given road.
  */
-void roadHopper(Queue* leavingThisOne, RoadData* road) {
-    if (front(leavingThisOne) == NULL) {
+void roadHopper(Queue* leavingThisQueue, RoadData* road) {
+    if (front(leavingThisQueue) == NULL) {
         return;
     }
     // Should we update the Car** array here too?
 
-    Car* car = dequeue(leavingThisOne);
-    enqueue(road->queue, car);
+    Car* car = dequeue(leavingThisQueue);
+    enqueue(road->q, car);
 }
 
 /* Suggested TODO - Write a function to attempt to move a car from the add car queue onto the end of this road.
  */
 void queueToRoad(Queue* leavingThisQueue, RoadData* road) {
+    if (front(leavingThisQueue) == NULL || road->cars[0] != NULL) {
+        return;
+    }
     // Could add error handling here
     // Should we update the Car** array here too?
     Car* car = dequeue(leavingThisQueue);
-    enqueue(road->queue, car);
+    enqueue(road->q, car);
 }
 
 

@@ -24,7 +24,7 @@ typedef struct TrafficData {
     int numCars;
     /* track the longest number of time steps that any light takes to cycle around.  This is useful for detecting gridlock. */
     int steps;
-    int maxTime;
+    int maxTime; //highest stepTime
 } TrafficData;
 
 void printNames();
