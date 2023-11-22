@@ -41,6 +41,6 @@ void moveCars(RoadData* road, int k);
 void updateLight(RoadData* road );
 
 void printDestinations(RoadData* road, int j);
-
+void printRoadsEvent(RoadData* road, int j);
 #endif
 
