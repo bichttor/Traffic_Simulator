@@ -68,18 +68,15 @@ void queueToRoad(Queue* leavingThisQueue, RoadData* road) {
 void updateLight(RoadData* road) {
   int i;
   for(i = 0; i < road->numRoad;i++){
+    if(road[i].lightcounter%road[i].reset == road[i].green){
+    road[i].light = true;
+    }
+    if(road[i].lightcounter%road[i].reset == road[i].red){
+    road[i].light = false;
+      }
     road[i].lightcounter++;
-    if(road[i].lightcounter > road[i].reset){/*reset road light*/
-      road[i].lightcounter = 0;
     }
-    else if(road[i].lightcounter != road[i].red &&road[i].lightcounter != road[i].reset){/*road is green*/
-      road[i].light = true;
-    }
-    else{/*road is red*/
-      road[i].light = false;   
-    }
-  }
-  
+ 
 }
 /* Suggested TODO - Write a function to print the destinations of the cars on the road
  */
