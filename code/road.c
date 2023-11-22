@@ -41,6 +41,9 @@ void moveCars(RoadData* road, int k/*k is the current position the car is in*/) 
  * to the last position of a another given road.
  */
 void roadHopper(Queue* leavingThisQueue, RoadData* road) {
+    // This will not work, we need to read in just RoadData* and figure out a way to get the from -> to road queues
+    // Maybe road->from and road->to will work?
+
     if (front(leavingThisQueue) == NULL) {
         return;
     }
@@ -95,8 +98,9 @@ void printRoadsEvent(RoadData* road, int j){
     if(i == 0){
       printf("STEP %d - PRINT_ROADS_EVENT - Current contents of the roads:\n", j);
     }
-     printf("\nCars on the road from %d to %d\n", road[i].from,road[i].to);
-     for(k = 0; k < road[i].roadlen; k++){
+      printf("\nCars on the road from %d to %d\n", road[i].from,road[i].to);
+
+      for(k = 0; k < road[i].roadlen; k++){
        if(road[i].cars[k] != NULL){
         printf("%d ", road[i].cars[k]->destination);
        }
