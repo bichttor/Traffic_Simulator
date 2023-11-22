@@ -213,6 +213,7 @@ void trafficSimulator( TrafficData* pTrafficData )
             }
             PQ = dequeuePQ( pTrafficData->pq );/* dequeue next event*/
           }
+	 updateLight(pTrafficData->roads);
         }
         /*simulate traffic*/
            
