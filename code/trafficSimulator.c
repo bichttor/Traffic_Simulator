@@ -57,35 +57,42 @@ TrafficData* createTrafficData( char* filename )
     }
 	
     /*read in data for cars*/
+       /*read in data for cars*/
     printf("Add the cars events:\n");
     fscanf(pFile, "%d", &add);
     traffic->maxTime = 0;
-    
     for(i = 0; i<add; i++){
       fscanf(pFile, "%d %d %d %d", &from, &to, &timeStep,&numCars);
       ET = getEdgeData(traffic->g,from,to);
       Event* e = createAddCarEvent(timeStep,ET );
-      e->pRoadData->cars = (Car**)malloc(sizeof(Car*)*numCars);
+    
       printf("\nCreated event for time step %d on road from %d to %d.\n",timeStep,from,to);
       printf("Destinations of added cars: ");
       
       for(j = 0; j < numCars; j++){
         fscanf(pFile,"%d", &destination);
-        e->pRoadData->cars[j] = createCar( timeStep, from, to,destination);
-        enqueue(e->pCarQueue, e->pRoadData->cars[j]);
+        Car* c = createCar( timeStep, from, to,destination);
+        enqueue(e->pCarQueue,c);
         traffic->maxTime = max(traffic->maxTime, timeStep);
         
         if(j == numCars-1){
-          printf("%d\n",e->pRoadData->cars[j]->destination);
+          printf("%d\n",c->destination);
         }
         else{
-          printf("%d, ",e->pRoadData->cars[j]->destination);
+          printf("%d, ",c->destination);
         }
         
       }
       enqueueByPriority( traffic->pq, e, e->eventTimeStep );/*ADD_CAR_EVENT*/
     }
-
+    /*sets car array = to NULL*/
+    for(i = 0; i < edges; i++){/*sets values in all road queues to NULL*/
+      traffic->roads[i].cars = (Car**)malloc(sizeof(Car*)*traffic->roads[i].roadlen);
+      for(j = 0; j < traffic->roads[i].roadlen; j++){
+        traffic->roads[i].cars[j] = NULL;
+      }
+    }
+    
     /*read in printRoad time steps*/
     printf("\nAdd the roads events:\nTime steps: ");
     
@@ -202,9 +209,7 @@ void trafficSimulator( TrafficData* pTrafficData )
               printf("STEP %d - ADD_CAR_EVENT - Cars enqueued on road from %d to %d\n\n", i, PQ->pRoadData->from,PQ->pRoadData->to);
             }
             if(PQ->eventCode == PRINT_ROADS_EVENT){
-              printf("STEP %d - PRINT_ROADS_EVENT - Current contents of the roads:\nCars on the road from %d to %d\n\n", i, pTrafficData->roads->from, pTrafficData->roads->to);
-              /*TODO correct to print out road*/
-              /*print out road queue*/
+              printRoadsEvent(pTrafficData->roads, i);
             }
             PQ = dequeuePQ( pTrafficData->pq );/* dequeue next event*/
           }
