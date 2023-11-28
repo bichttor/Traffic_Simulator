@@ -190,9 +190,12 @@ void trafficSimulator( TrafficData* pTrafficData )
       /*if( all cars reached destination || gridlock has occurred){
           break;
         } */
-          updateLight(pTrafficData->roads, i);
-      	  while(PQ != NULL && i == PQ->eventTimeStep){/*go through every event in this time step*/
-			if(PQ->eventCode == ADD_CAR_EVENT){/*add cars into a waiting queue for the roads*/
+
+      	updateLight(pTrafficData->roads, i);
+
+
+      	while(PQ != NULL && i == PQ->eventTimeStep){/*go through every event in this time step*/
+      		if(PQ->eventCode == ADD_CAR_EVENT){/*add cars into a waiting queue for the roads*/
               mergeQueues(PQ->pRoadData->q, PQ->pCarQueue);
               printf("STEP %d - ADD_CAR_EVENT - Cars enqueued on road from %d to %d\n", i, PQ->pRoadData->from,PQ->pRoadData->to);
               freeEvent( PQ );
@@ -213,7 +216,7 @@ void trafficSimulator( TrafficData* pTrafficData )
 
 
         /* First try to move cars through the next intersection */
-        roadHopper( pTrafficData->roads);
+      	roadHopper( pTrafficData->roads);
         /* Second move waiting cars onto the end of each road if possible */
          queueToRoad(pTrafficData->roads);
         /* Third move cars forward on every road (only those that haven't moved yet this time step) */

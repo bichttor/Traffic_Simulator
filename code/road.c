@@ -50,9 +50,12 @@ void moveCars(RoadData* road) {
  */
 void roadHopper(RoadData* road) {
     int i;
-    Car* car = road->cars;
+    //Car* car = road->cars;
     for(i = 0; i < road->numRoad; i++){
         if(road[i].cars[0] != NULL && road[i].light){
+          //car = dequeue(road->q);
+
+          // It will be something like road[i]->car->next
 
         // dequeue, then find shortest path, enqueue car at that road
         /*maybe get shortest distance to find next node then enqueue the car into that node, if light is green
