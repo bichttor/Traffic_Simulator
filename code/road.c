@@ -76,7 +76,7 @@ void queueToRoad(RoadData* road) {
 
 /* Suggested TODO - Write a function to update the current state of the traffic light based on the current cycle.
  */
-void updateLight(RoadData* road,j) {
+void updateLight(RoadData* road, int j) {
  int i;
   for(i = 0; i < road->numRoad;i++){
     if(j%road[i].reset == road[i].green){
