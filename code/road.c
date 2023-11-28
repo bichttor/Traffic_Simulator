@@ -60,7 +60,7 @@ void roadHopper(RoadData* road) {
 
 /* Suggested TODO - Write a function to attempt to move a car from the add car queue onto the end of this road.
  */
-void queueToRoad(Queue* leavingThisQueue, RoadData* road) {
+void queueToRoad(RoadData* road) {
       int i;
       queueType qt; /*car*/
       for(i = 0; i < road->numRoad; i++){ 
