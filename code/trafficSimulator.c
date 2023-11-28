@@ -45,16 +45,6 @@ TrafficData* createTrafficData( char* filename )
     }
     /*store number of roads*/
     traffic->roads->numRoad = edges;
-    
-    /*initializes the lightcounter to keep track of when to switch lights*/
-    for(i = 0; i < edges;i++){
-       traffic->roads[i].lightcounter = 0;
-    }
-    for(i = 0; i < edges; i++){/*sets values in all road queues to NULL*/
-      for(j = 0; j < traffic->roads[i].q->numElements; j++){
-        enqueue(traffic->roads[i].q, NULL);
-      }
-    }
 	
     /*read in data for cars*/
        /*read in data for cars*/
@@ -192,43 +182,47 @@ void printRoadData( int length, int from, int to, int greenStartTime, int greenE
 void trafficSimulator( TrafficData* pTrafficData )
 {
     /* TODO: complete this function */
-	int i;
-    priorityQueueType PQ;
-    Queue *waitingCars = createQueue();
-    
-    /* Loop until all events processed and either all cars reached destination or gridlock has occurred */
-    while(!isEmptyPQ(pTrafficData->pq) /*&& either all cars reached destination || gridlock has occurred */){
-      PQ = dequeuePQ( pTrafficData->pq );
-      /* Update the state of every traffic */ 
-      updateLight(pTrafficData->roads);
+    int i;
+     priorityQueueType PQ;
+     
+     /* Loop until all events processed and either all cars reached destination or gridlock has occurred */
+      PQ = dequeuePQ( pTrafficData->pq ); 
       for(i = 0; i < pTrafficData->maxTime; i++){/* Loop on events associated with this time step */
+      /*if( all cars reached destination || gridlock has occurred){
+          break;
+        } */
+         
         if(PQ->eventTimeStep == i){
           while(i == PQ->eventTimeStep){/*go through every event in this time step*/
             if(PQ->eventCode == ADD_CAR_EVENT){/*add cars into a waiting queue for the roads*/
-              mergeQueues(waitingCars, PQ->pCarQueue);
+              mergeQueues(PQ->pRoadData->q, PQ->pCarQueue);
               printf("STEP %d - ADD_CAR_EVENT - Cars enqueued on road from %d to %d\n\n", i, PQ->pRoadData->from,PQ->pRoadData->to);
+              freeEvent( PQ ); 
             }
+            
             if(PQ->eventCode == PRINT_ROADS_EVENT){
               printRoadsEvent(pTrafficData->roads, i);
+              freeEvent( PQ );
             }
+             
             PQ = dequeuePQ( pTrafficData->pq );/* dequeue next event*/
           }
-	 updateLight(pTrafficData->roads);
-        }
+            
+        } 
         /*simulate traffic*/
-           
+        /* Update the state of every traffic */ 
+        updateLight(pTrafficData->roads, i); 
         /* First try to move cars through the next intersection */
-        
+        roadHopper( pTrafficData->roads);
         /* Second move waiting cars onto the end of each road if possible */
-
+         queueToRoad(pTrafficData->roads);
         /* Third move cars forward on every road (only those that haven't moved yet this time step) */
+         moveCars(pTrafficData->roads);
+         resetCar(pTrafficData->roads);
         
         /*if car reaches destination, print reach destination in I amount of steps then free car, maybe use a counter to see if all the cars have made their destination*/
       }
-    
-    }
-    printf("Average number of time steps to the reach their destination is AVG.\nMaximum number of time steps to the reach their destination is MAX.");
-  
+      printf("Average number of time steps to the reach their destination is AVG.\nMaximum number of time steps to the reach their destination is MAX.");
 }
 
 /* freeTrafficData
