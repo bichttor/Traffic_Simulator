@@ -77,18 +77,20 @@ void queueToRoad(RoadData* road) {
 /* Suggested TODO - Write a function to update the current state of the traffic light based on the current cycle.
  */
 void updateLight(RoadData* road, int j) {
- int i;
-  for(i = 0; i < road->numRoad;i++){
+  int i;
+  for (i = 0; i < road->numRoad; i++) {
     int cycle = j % road[i].reset;
 
-    if(cycle >= road[i].green && cycle < road[i].red){
-    road[i].light = true;
+    if (cycle >= road[i].green && cycle < road[i].red) {
+
+      road[i].light = true;
+      //printf("Light is green\n");
+    } else {
+
+      road[i].light = false;
+      //printf("Light is red\n");
     }
-    else{
-    road[i].light = false;
-      }
-    }
- 
+  }
 }
 
 /*resets moves for next timestep*/
@@ -134,7 +136,7 @@ void printRoadsEvent(RoadData* road, int j){
       if(road[i].light == true){
        printf("(GREEN LIGHT)\n");
      }
-    else if(road[i].light == false) {
+     else if(road[i].light == false) {
       printf("(RED LIGHT)\n");
     }
      else{
