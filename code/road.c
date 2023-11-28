@@ -119,7 +119,7 @@ void printRoadsEvent(RoadData* road, int j){
     if(i == 0){
       printf("STEP %d - PRINT_ROADS_EVENT - Current contents of the roads:\n", j);
     }
-      printf("\nCars on the road from %d to %d\n", road[i].from,road[i].to);
+      printf("Cars on the road from %d to %d\n", road[i].from,road[i].to);
 
       for(k = 0; k < road[i].roadlen; k++){
        if(road[i].cars[k] != NULL){
@@ -130,10 +130,13 @@ void printRoadsEvent(RoadData* road, int j){
        }
      }
       if(road[i].light == true){
-       printf("(GREEN LIGHT)");
+       printf("(GREEN LIGHT)\n");
      }
+    else if(road[i].light == false) {
+      printf("(RED LIGHT)\n");
+    }
      else{
-       printf("(RED LIGHT)");
+       printf("(??? LIGHT)\n");
      }
   }
   printf("\n");

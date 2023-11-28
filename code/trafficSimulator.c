@@ -48,7 +48,7 @@ TrafficData* createTrafficData( char* filename )
 	
     /*read in data for cars*/
        /*read in data for cars*/
-    printf("Add the cars events:\n");
+    printf("Add the cars events:");
     fscanf(pFile, "%d", &add);
     traffic->maxTime = 0;
     for(i = 0; i<add; i++){
@@ -147,7 +147,7 @@ void printRoadData( int length, int from, int to, int greenStartTime, int greenE
 	int i;
 	char state='R';
 	
-	printf("Created road from %d to %d with length %d (green=%d; red=%d; reset=%d).\n", from, to, length, greenStartTime, greenEndTime, lightCycleLength );
+	printf("Add the roads:\nCreated road from %d to %d with length %d (green=%d; red=%d; reset=%d).\n", from, to, length, greenStartTime, greenEndTime, lightCycleLength );
 	printf("Cycle number: ");
 	for( i=0; i<25; i++ ){
 		printf("%2d ", i );
@@ -222,7 +222,7 @@ void trafficSimulator( TrafficData* pTrafficData )
         
         /*if car reaches destination, print reach destination in I amount of steps then free car, maybe use a counter to see if all the cars have made their destination*/
       }
-      printf("Average number of time steps to the reach their destination is AVG.\nMaximum number of time steps to the reach their destination is MAX.");
+      printf("\nAverage number of time steps to the reach their destination is AVG.\nMaximum number of time steps to the reach their destination is MAX.");
 }
 
 /* freeTrafficData
