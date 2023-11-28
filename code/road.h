@@ -17,7 +17,6 @@ typedef struct RoadData
     int green;
     int red;
     int reset;
-    int lightcounter;
     bool light; /*green == TRUE, red/reset == FALSE*/
     /* intersections this road starts from and moves to */
     int from; // origin
@@ -35,10 +34,11 @@ typedef struct RoadData
 }  RoadData;
 RoadData* createRoad(RoadData* road, int from, int roadlen, int green, int red, int reset);
 void freeRoad(RoadData* road);
-void roadHopper(Queue* leavingThisQueue, RoadData* road);
-void queueToRoad(Queue* leavingThisQueue, RoadData* road);
-void moveCars(RoadData* road, int k);
-void updateLight(RoadData* road );
+void roadHopper(RoadData* road);
+void queueToRoad(RoadData* road);
+void moveCars(RoadData* road);
+void updateLight(RoadData* road, int j);
+void resetCar(RoadData* road);
 
 void printDestinations(RoadData* road, int j);
 void printRoadsEvent(RoadData* road, int j);
