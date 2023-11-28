@@ -49,9 +49,12 @@ void moveCars(RoadData* road) {
  * to the last position of a another given road.
  */
 void roadHopper(RoadData* road) {
-   int i;
+    int i;
+    Car* car = road->cars;
     for(i = 0; i < road->numRoad; i++){
-      if(road[i].cars[0] != NULL){
+        if(road[i].cars[0] != NULL && road[i].light){
+
+        // dequeue, then find shortest path, enqueue car at that road
         /*maybe get shortest distance to find next node then enqueue the car into that node, if light is green
         and the spot is NULL then add car to the road else leave in the queue*/
       }
@@ -145,4 +148,3 @@ void printRoadsEvent(RoadData* road, int j){
   }
   printf("\n");
 }
-

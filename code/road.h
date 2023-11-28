@@ -39,7 +39,6 @@ void queueToRoad(RoadData* road);
 void moveCars(RoadData* road);
 void updateLight(RoadData* road, int j);
 void resetCar(RoadData* road);
-
 void printDestinations(RoadData* road, int j);
 void printRoadsEvent(RoadData* road, int j);
 #endif
