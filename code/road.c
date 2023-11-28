@@ -79,10 +79,12 @@ void queueToRoad(RoadData* road) {
 void updateLight(RoadData* road, int j) {
  int i;
   for(i = 0; i < road->numRoad;i++){
-    if(j%road[i].reset == road[i].green){
+    int cycle = j % road[i].reset;
+
+    if(cycle >= road[i].green && cycle < road[i].red){
     road[i].light = true;
     }
-    if(j%road[i].reset == road[i].red){
+    else{
     road[i].light = false;
       }
     }

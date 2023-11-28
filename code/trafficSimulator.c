@@ -183,17 +183,16 @@ void trafficSimulator( TrafficData* pTrafficData )
 {
     /* TODO: complete this function */
     int i;
-     priorityQueueType PQ;
+     priorityQueueType PQ = dequeuePQ( pTrafficData->pq );
      
      /* Loop until all events processed and either all cars reached destination or gridlock has occurred */
-      PQ = dequeuePQ( pTrafficData->pq ); 
-      for(i = 0; i < pTrafficData->maxTime; i++){/* Loop on events associated with this time step */
+      for(i = 0; i <= pTrafficData->maxTime; i++){/* Loop on events associated with this time step */
       /*if( all cars reached destination || gridlock has occurred){
           break;
         } */
-         
-        if(PQ->eventTimeStep == i){
-          while(i == PQ->eventTimeStep){/*go through every event in this time step*/
+
+        //if(PQ->eventTimeStep == i){
+          while(PQ != NULL && i == PQ->eventTimeStep){/*go through every event in this time step*/
             if(PQ->eventCode == ADD_CAR_EVENT){/*add cars into a waiting queue for the roads*/
               mergeQueues(PQ->pRoadData->q, PQ->pCarQueue);
               printf("STEP %d - ADD_CAR_EVENT - Cars enqueued on road from %d to %d\n\n", i, PQ->pRoadData->from,PQ->pRoadData->to);
@@ -208,17 +207,17 @@ void trafficSimulator( TrafficData* pTrafficData )
             PQ = dequeuePQ( pTrafficData->pq );/* dequeue next event*/
           }
             
-        } 
+        //}
         /*simulate traffic*/
         /* Update the state of every traffic */ 
-        updateLight(pTrafficData->roads, i); 
+        //updateLight(pTrafficData->roads, i);
         /* First try to move cars through the next intersection */
-        roadHopper( pTrafficData->roads);
+        //roadHopper( pTrafficData->roads);
         /* Second move waiting cars onto the end of each road if possible */
-         queueToRoad(pTrafficData->roads);
+         //queueToRoad(pTrafficData->roads);
         /* Third move cars forward on every road (only those that haven't moved yet this time step) */
-         moveCars(pTrafficData->roads);
-         resetCar(pTrafficData->roads);
+         //moveCars(pTrafficData->roads);
+         //resetCar(pTrafficData->roads);
         
         /*if car reaches destination, print reach destination in I amount of steps then free car, maybe use a counter to see if all the cars have made their destination*/
       }
