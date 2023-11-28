@@ -191,7 +191,6 @@ void trafficSimulator( TrafficData* pTrafficData )
           break;
         } */
 
-        //if(PQ->eventTimeStep == i){
           while(PQ != NULL && i == PQ->eventTimeStep){/*go through every event in this time step*/
             if(PQ->eventCode == ADD_CAR_EVENT){/*add cars into a waiting queue for the roads*/
               mergeQueues(PQ->pRoadData->q, PQ->pCarQueue);
@@ -206,8 +205,7 @@ void trafficSimulator( TrafficData* pTrafficData )
              
             PQ = dequeuePQ( pTrafficData->pq );/* dequeue next event*/
           }
-            
-        //}
+
         /*simulate traffic*/
         /* Update the state of every traffic */ 
         //updateLight(pTrafficData->roads, i);
