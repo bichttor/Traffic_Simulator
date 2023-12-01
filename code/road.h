@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-#include "car.h"
+#include "car.h" 
 #include "queue.h"
 
 typedef struct RoadData
@@ -34,11 +34,13 @@ typedef struct RoadData
 }  RoadData;
 RoadData* createRoad(RoadData* road, int from, int roadlen, int green, int red, int reset);
 void freeRoad(RoadData* road);
-void roadHopper(RoadData* road);
-void queueToRoad(RoadData* road);
-void moveCars(RoadData* road);
+bool roadHopper(RoadData* cur,RoadData* next);
+bool queueToRoad(RoadData* road);
+bool moveCars(RoadData* road);
 void updateLight(RoadData* road, int j);
 void resetCar(RoadData* road);
+
+int checkGridlock(RoadData* road);
 void printDestinations(RoadData* road, int j);
 void printRoadsEvent(RoadData* road, int j);
 #endif

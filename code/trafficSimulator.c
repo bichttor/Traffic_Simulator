@@ -28,7 +28,7 @@ TrafficData* createTrafficData( char* filename )
     traffic->g = createGraph(vertices);
     traffic->roads = (RoadData*)malloc(sizeof(RoadData)*edges);
     traffic->pq = createPQ( );
-
+    traffic->steps = 0;
     k = 0;/*keep track of the roads*/
     /*read in data for roads*/
     for(i = 0; i < vertices; i++){
@@ -37,8 +37,9 @@ TrafficData* createTrafficData( char* filename )
 	fscanf(pFile, "%d %d %d %d %d", &traffic->roads[k].from, &traffic->roads[k].roadlen, &traffic->roads[k].green, &traffic->roads[k].red, &traffic->roads[k].reset);
         traffic->roads[k].to = i;
         traffic->roads[k].q = createQueue();
+        traffic->steps = max(traffic->steps ,traffic->roads[k].reset);
         setEdge(traffic->g, traffic->roads[k].from, traffic->roads[k].to , traffic->roads[k].roadlen );
-	setEdgeData( traffic->g, traffic->roads[k].from,traffic->roads[k].to, &traffic->roads[k]);
+      	setEdgeData( traffic->g, traffic->roads[k].from,traffic->roads[k].to, &traffic->roads[k]);
         printRoadData( traffic->roads[k].roadlen, traffic->roads[k].from, traffic->roads[k].to, traffic->roads[k].green, traffic->roads[k].red, traffic->roads[k].reset );
         k++;
       }
@@ -47,15 +48,15 @@ TrafficData* createTrafficData( char* filename )
     traffic->roads->numRoad = edges;
 
     /*read in data for cars*/
-       /*read in data for cars*/
     printf("Add the cars events:");
     fscanf(pFile, "%d", &add);
     traffic->maxTime = 0;
+    traffic->numCars = 0;
     for(i = 0; i<add; i++){
       fscanf(pFile, "%d %d %d %d", &from, &to, &timeStep,&numCars);
       ET = getEdgeData(traffic->g,from,to);
       Event* e = createAddCarEvent(timeStep,ET );
-
+      traffic->numCars += numCars;
       printf("\nCreated event for time step %d on road from %d to %d.\n",timeStep,from,to);
       printf("Destinations of added cars: ");
 
@@ -79,7 +80,7 @@ TrafficData* createTrafficData( char* filename )
     for(i = 0; i < edges; i++){/*sets values in all road queues to NULL*/
       traffic->roads[i].cars = (Car**)malloc(sizeof(Car*)*traffic->roads[i].roadlen);
       for(j = 0; j < traffic->roads[i].roadlen; j++){
-        traffic->roads[i].cars[j] = NULL;
+         traffic->roads[i].cars[j] = NULL;
       }
     }
 
@@ -182,18 +183,17 @@ void printRoadData( int length, int from, int to, int greenStartTime, int greenE
 void trafficSimulator( TrafficData* pTrafficData )
 {
     /* TODO: complete this function */
-    int i;
-     priorityQueueType PQ = dequeuePQ( pTrafficData->pq );
-
+    int i=0,j,reached = 0,gridlock = 0;
+    double avg = 0;
+    bool t1,t2,t3, t4 = false;
+    priorityQueueType PQ;
+    
      /* Loop until all events processed and either all cars reached destination or gridlock has occurred */
-      for(i = 0; i <= pTrafficData->maxTime; i++){/* Loop on events associated with this time step */
-      /*if( all cars reached destination || gridlock has occurred){
-          break;
-        } */
-
+      while(!isEmptyPQ(pTrafficData->pq ) || (reached != pTrafficData->numCars  && gridlock <= pTrafficData->steps)){
+        
       	updateLight(pTrafficData->roads, i);
-
-
+       
+        PQ = dequeuePQ( pTrafficData->pq );
       	while(PQ != NULL && i == PQ->eventTimeStep){/*go through every event in this time step*/
       		if(PQ->eventCode == ADD_CAR_EVENT){/*add cars into a waiting queue for the roads*/
               mergeQueues(PQ->pRoadData->q, PQ->pCarQueue);
@@ -201,7 +201,7 @@ void trafficSimulator( TrafficData* pTrafficData )
               freeEvent( PQ );
             }
 
-            if(PQ->eventCode == PRINT_ROADS_EVENT){
+          else if(PQ->eventCode == PRINT_ROADS_EVENT){
                 printf("\n");
                 printRoadsEvent(pTrafficData->roads, i);
                 freeEvent( PQ );
@@ -209,23 +209,55 @@ void trafficSimulator( TrafficData* pTrafficData )
 
             PQ = dequeuePQ( pTrafficData->pq );/* dequeue next event*/
           }
-
+         if(PQ != NULL){
+          enqueueByPriority( pTrafficData->pq, PQ, PQ->eventTimeStep);
+         }
         /*simulate traffic*/
-        /* Update the state of every traffic */
-
-
-
+        /*reach destination*/
+        for(j = 0; j < pTrafficData->roads->numRoad; j++){
+          if(pTrafficData->roads[j].cars[0] != NULL && pTrafficData->roads[j].cars[0]->next == pTrafficData->roads[j].cars[0]->destination && pTrafficData->roads[j].light){
+            pTrafficData->roads[j].cars[0]->stepAdded  = i - pTrafficData->roads[j].cars[0]->stepAdded + 1;
+            printf("STEP %d - Car successfully traveled from %d to %d in %d time steps.\n",i, pTrafficData->roads[j].cars[0]->origin,pTrafficData->roads[j].cars[0]->destination,pTrafficData->roads[j].cars[0]->stepAdded);
+            avg += pTrafficData->roads[j].cars[0]->stepAdded;
+            freeCar(pTrafficData->roads[j].cars[0]);
+            pTrafficData->roads[j].cars[0] = NULL;
+            reached++;
+            t4 = true;
+        }
+       }
         /* First try to move cars through the next intersection */
-      	roadHopper( pTrafficData->roads);
+        for(j = 0; j < pTrafficData->roads->numRoad; j++){
+          edgeType e = &pTrafficData->roads[j];
+          
+          if(e->cars[0] != NULL){/*finds car ready to change road*/
+            graphType* pnext = (graphType*)malloc(sizeof(graphType));
+            if(getNextOnShortestPath( pTrafficData->g, e->cars[0]->next, e->cars[0]->destination, pnext)){
+              edgeType nextRoad =  getEdgeData( pTrafficData->g, e->cars[0]->next, *pnext);
+              t3 = roadHopper(e,nextRoad);
+            }
+            free(pnext);
+          }   
+        } 	
         /* Second move waiting cars onto the end of each road if possible */
-         queueToRoad(pTrafficData->roads);
+         t1 = queueToRoad(pTrafficData->roads);
         /* Third move cars forward on every road (only those that haven't moved yet this time step) */
-         moveCars(pTrafficData->roads);
+         t2 = moveCars(pTrafficData->roads);
+         
+         if(t1 || t2 || t3 || t4){
+           gridlock = 0;
+         }
+         gridlock += checkGridlock(pTrafficData->roads);
          resetCar(pTrafficData->roads);
-
-        /*if car reaches destination, print reach destination in I amount of steps then free car, maybe use a counter to see if all the cars have made their destination*/
+         i++;
+         t4 = false;
       }
-      printf("\nAverage number of time steps to the reach their destination is AVG.\nMaximum number of time steps to the reach their destination is MAX.");
+     if(gridlock > pTrafficData->steps){
+       printf("STEP %d - Gridlock Detected\n",i);
+       return;
+     }
+   
+    avg = avg / pTrafficData->numCars;
+    printf("\nAverage number of time steps to the reach their destination is %.2lf.\nMaximum number of time steps to the reach their destination is %d.",avg,i);
 }
 
 /* freeTrafficData
